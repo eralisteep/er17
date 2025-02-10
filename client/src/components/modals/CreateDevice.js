@@ -1,19 +1,14 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import {Button, Dropdown, Form, Col} from "react-bootstrap";
 import {Context} from "../../index";
-import {createDevice, fetchBrands, fetchCounts} from "../../http/deviceAPI";
+import {createDevice, } from "../../http/deviceAPI";
 import {observer} from "mobx-react-lite";
 
 const CreateDevice = observer(({show, onHide}) => {
     const {device} = useContext(Context)
     const [name, setName] = useState('')
     const [info, setInfo] = useState([])
-
-    useEffect(() => {
-        fetchBrands().then(data => device.setBrands(data))
-        fetchCounts().then(data => device.setCounts(data))
-    }, [])
 
     const addInfo = () => {
         setInfo([...info, {title: '', description1: '', description2: '', description3: '', description4: '', number: Date.now()}])
@@ -104,21 +99,21 @@ const CreateDevice = observer(({show, onHide}) => {
                                 <Form.Control
                                     value={i.description1}
                                     onChange={(e) => changeInfo('description1', e.target.value, i.number)}
-                                    placeholder="Введите варинты ответа(4)"
+                                    placeholder="Введите варинты ответа(1)"
                                 />
                             </Col>
                             <Col className="mt-2 mb-2">
                                 <Form.Control
                                     value={i.description2}
                                     onChange={(e) => changeInfo('description2', e.target.value, i.number)}
-                                    placeholder="Введите варинты ответа(4)"
+                                    placeholder="Введите варинты ответа(2)"
                                 />
                             </Col>
                             <Col className="mt-2 mb-2">
                                 <Form.Control
                                     value={i.description3}
                                     onChange={(e) => changeInfo('description3', e.target.value, i.number)}
-                                    placeholder="Введите варинты ответа(4)"
+                                    placeholder="Введите варинты ответа(3)"
                                 />
                             </Col>
                             <Col className="mt-2 mb-2">
@@ -128,13 +123,6 @@ const CreateDevice = observer(({show, onHide}) => {
                                     placeholder="Введите варинты ответа(4)"
                                 />
                             </Col>
-                            <Form.Control as="select" className="mt-2 mb-2">
-                            <option value="">Выберите правильный ответ</option>
-                                <option value="description1">Ответ 1</option>
-                                <option value="description2">Ответ 2</option>
-                                <option value="description3">Ответ 3</option>
-                                <option value="description4">Ответ 4</option>
-                            </Form.Control>
                             <Col className="mt-2 mb-2">
                                 <Button
                                     onClick={() => removeInfo(i.number)}
