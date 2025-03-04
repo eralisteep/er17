@@ -1,14 +1,18 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import Modal from "react-bootstrap/Modal";
 import {Button, Dropdown, Form, Col} from "react-bootstrap";
 import {Context} from "../../index";
-import {createDevice, } from "../../http/deviceAPI";
+import {createDevice, fetchCounts} from "../../http/deviceAPI";
 import {observer} from "mobx-react-lite";
 
 const CreateDevice = observer(({show, onHide}) => {
     const {device} = useContext(Context)
     const [name, setName] = useState('')
     const [info, setInfo] = useState([])
+
+    useEffect(() => {
+        fetchCounts().then(data => device.setCounts(data))
+    }, [])
 
     const addInfo = () => {
         setInfo([...info, {title: '', description1: '', description2: '', description3: '', description4: '', number: Date.now()}])
@@ -27,7 +31,6 @@ const CreateDevice = observer(({show, onHide}) => {
         formData.append('info', JSON.stringify(info))
         createDevice(formData).then(data => onHide())
     }
-
     return (
         <Modal
             show={show}
@@ -74,16 +77,15 @@ const CreateDevice = observer(({show, onHide}) => {
                                     <Dropdown.Toggle>{i.count || "Выберите тип"}</Dropdown.Toggle>
                                     <Dropdown.Menu>
                                     {device.counts.map(count => 
-                                            <Dropdown.Item
+                                        <Dropdown.Item
                                             onClick={(e) => {
                                                 device.setSelectedCount(count);
                                                 changeInfo('count', count.name, i.number);
-                                              }}
-                                            
-                                                key={i.count}
-                                            >
+                                            }}
+                                            key={count.id}
+                                        >
                                             {count.name}
-                                            </Dropdown.Item>
+                                        </Dropdown.Item>
                                     )}
                                     </Dropdown.Menu>
                                 </Dropdown>
